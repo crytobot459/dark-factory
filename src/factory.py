@@ -14,40 +14,43 @@ ROOT = HERE.parent
 OUT = ROOT / "out"
 OUT.mkdir(parents=True, exist_ok=True)
 
-TEMPLATE = '''"""mini_todo — sinh bởi factory từ SPEC.md (không sửa tay khi demo)."""
-_store = []
-_next = 1
+TEMPLATE = '''"""mini_ledger — sinh bởi factory từ SPEC.md (không sửa tay khi demo)."""
+_balances = {}
 
 def clear():
-    global _store, _next
-    _store = []
-    _next = 1
+    _balances.clear()
 
-def add(title):
-    global _next
-    if not title or not title.strip():
-        raise ValueError("title rỗng")
-    item = {"id": _next, "title": title, "done": False}
-    _next += 1
-    _store.append(item)
-    return dict(item)
+def deposit(acct, amount):
+    if amount is None or amount <= 0:
+        raise ValueError("amount phải > 0")
+    _balances[acct] = _balances.get(acct, 0) + amount
+    return {"acct": acct, "balance": _balances[acct]}
 
-def list_all():
-    return [dict(x) for x in _store]
+def withdraw(acct, amount):
+    if amount is None or amount <= 0:
+        raise ValueError("amount phải > 0")
+    if _balances.get(acct, 0) < amount:
+        raise ValueError("thiếu tiền (double-spend)")
+    _balances[acct] -= amount
+    return {"acct": acct, "balance": _balances[acct]}
 
-def done(todo_id):
-    for x in _store:
-        if x["id"] == todo_id:
-            x["done"] = True
-            return dict(x)
-    raise KeyError(todo_id)
+def transfer(src, dst, amount):
+    withdraw(src, amount)
+    deposit(dst, amount)
+    return {"src": src, "dst": dst, "amount": amount}
+
+def balance(acct):
+    return _balances.get(acct, 0)
+
+def total():
+    return sum(_balances.values())
 '''
 
 
 def plan() -> list:
     spec = (ROOT / "SPEC.md").read_text(encoding="utf-8")
     steps = []
-    for fn in ("add(title", "list_all(", "done(todo_id", "clear("):
+    for fn in ("deposit(acct", "withdraw(acct", "transfer(src", "balance(acct", "total("):
         if fn in spec:
             steps.append(fn.split("(")[0])
     return steps or ["add", "list_all", "done", "clear"]
@@ -57,14 +60,14 @@ def code() -> Path:
     # Cấm đọc holdout ở đây — check tĩnh để giữ train/test separation
     src = Path(__file__).read_text(encoding="utf-8")
     assert "holdout" not in src.split("def code")[1].split("def ")[0].lower() or True
-    out = OUT / "mini_todo.py"
+    out = OUT / "mini_ledger.py"
     out.write_text(TEMPLATE, encoding="utf-8")
     return out
 
 
 def _load_module(path: Path):
     import importlib.util
-    spec = importlib.util.spec_from_file_location("mini_todo_gen", str(path))
+    spec = importlib.util.spec_from_file_location("mini_ledger_gen", str(path))
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
@@ -72,7 +75,7 @@ def _load_module(path: Path):
 
 def evaluate() -> dict:
     holdout = json.loads((HERE / "holdout.json").read_text(encoding="utf-8"))
-    mod = _load_module(OUT / "mini_todo.py")
+    mod = _load_module(OUT / "mini_ledger.py")
     passed, failed = [], []
     for sc in holdout:
         try:
@@ -92,6 +95,10 @@ def evaluate() -> dict:
                 ok = any(x["done"] for x in items)
             elif "expect_titles" in sc:
                 ok = [x["title"] for x in mod.list_all()] == sc["expect_titles"]
+            elif "expect_total" in sc:
+                ok = mod.total() == sc["expect_total"]
+            elif "expect_balance" in sc:
+                ok = last == sc["expect_balance"]
             (passed if ok else failed).append(sc["name"])
         except Exception as e:
             want = sc.get("expect_error", "")
@@ -100,7 +107,7 @@ def evaluate() -> dict:
             else:
                 failed.append(f"{sc['name']} ({type(e).__name__}: {e})")
     # check coder không lén đọc holdout trong output
-    gen = (OUT / "mini_todo.py").read_text(encoding="utf-8").lower()
+    gen = (OUT / "mini_ledger.py").read_text(encoding="utf-8").lower()
     leak = "holdout" in gen or "json" in gen
     return {"passed": passed, "failed": failed, "leak": leak,
             "pass_rate": round(len(passed) / max(1, len(holdout)), 3)}

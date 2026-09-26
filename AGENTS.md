@@ -6,7 +6,7 @@
 
 ## Conventions
 - Coder chỉ đọc `SPEC.md` + file này. Cấm đọc `src/holdout.json` (evaluator giữ riêng).
-- Code sinh ra ghi vào `out/mini_todo.py` (không ghi đè src/).
+- Code sinh ra ghi vào `out/mini_ledger.py` (không ghi đè src/).
 - Mọi số báo cáo (pass-rate, override, token) phải chạy lại được bằng 1 lệnh trên.
 
 ## Architecture

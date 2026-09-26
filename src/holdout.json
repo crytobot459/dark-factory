@@ -1,7 +1,7 @@
 [
-  {"name": "add_returns_sequential_ids", "steps": [["add", "Buy milk"], ["add", "Write spec"]], "expect_ids": [1, 2]},
-  {"name": "empty_title_raises", "steps": [["add", ""]], "expect_error": "ValueError"},
-  {"name": "done_marks_item", "steps": [["add", "Task A"], ["done", 1]], "expect_done": true},
-  {"name": "done_bad_id_raises", "steps": [["done", 999]], "expect_error": "KeyError"},
-  {"name": "list_preserves_order", "steps": [["add", "One"], ["add", "Two"], ["add", "Three"]], "expect_titles": ["One", "Two", "Three"]}
+  {"name": "deposit_conserves", "steps": [["deposit", ["A", 100]], ["deposit", ["B", 50]]], "expect_total": 150},
+  {"name": "transfer_preserves", "steps": [["deposit", ["A", 100]], ["transfer", ["A", "B", 40]]], "expect_total": 100},
+  {"name": "double_spend_fails", "steps": [["deposit", ["A", 50]], ["withdraw", ["A", 50]], ["withdraw", ["A", 10]]], "expect_error": "ValueError"},
+  {"name": "negative_deposit_raises", "steps": [["deposit", ["A", -10]]], "expect_error": "ValueError"},
+  {"name": "empty_balance_zero", "steps": [["balance", "Z"]], "expect_balance": 0}
 ]

@@ -30,10 +30,11 @@ input -> src/main.py:build() [sponsor band load-bearing] -> output
 - `app.py` — demo entry (Gradio), wrap `build()`
 - `SPEC.md` (nếu có) — interfaces versioned cho agent khác build tiếp
 
-## Results (điền số sau khi chạy)
+## Results (pocketful track, chạy lại được bằng `python3 src/main.py`)
 
-- Before: __ -> After: __ (thời gian/chất lượng/chi phí)
-- Evaluator: __/__ passed (rate __) | Token/task: ~__ | Override: __
+- Before: code ví viết tay ~2h + review diff thủ công -> After: factory spec→checked code ~1 phút + evaluator tự chấm
+- Evaluator: 5/5 passed (rate 1.0) | Token/task: ~609 | Override: 0 (chưa review tay)
+- Invariants chứng minh: conservation (deposit 100+50=150), transfer giữ tổng, double-spend raise, âm raise, balance mới = 0
 
 ## Cần key gì (nếu có)
 

@@ -1,7 +1,7 @@
-# CONCEPT chốt — Dark Factory (spec → checked code, đo được)
+# CONCEPT chốt — Dark Factory (pocketful track: wallet ledger chứng minh conservation)
 
-**Tên:** Mini Factory — 1 spec văn bản ra 1 module todo chạy được, evaluator chấm holdout coder không được đọc.
-**Elevator (10s):** Viết spec 1 trang, factory tự plan-code-tự chấm, ra code merge được kèm số pass-rate.
+**Tên:** Mini Factory — 1 spec ví ra 1 module ledger chạy được, evaluator chấm holdout coder không được đọc.
+**Elevator (10s):** Viết spec ví 1 trang, factory tự plan-code-tự chấm, ra code chứng minh tiền không tự sinh/không mất/không tiêu 2 lần.
 
 ## Vì sao thắng (4/4)
 - [x] Core loop 24h: `python3 src/main.py` đã chạy end-to-end tối nay (planner→coder→evaluator, 5 holdout).

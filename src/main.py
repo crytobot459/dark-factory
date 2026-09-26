@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Mini Factory demo runner — 1 lệnh ra số cho video.
 Chạy từ build/wearedevelopers-hackathon/: python3 src/main.py
-Quay: SPEC.md -> terminal chạy lệnh này -> số pass-rate + file out/mini_todo.py.
+Quay: SPEC.md -> terminal chạy lệnh này -> số pass-rate + file out/mini_ledger.py.
 """
 import sys
 from pathlib import Path

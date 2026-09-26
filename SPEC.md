@@ -1,17 +1,19 @@
-# SPEC — mini_todo (versioned, coder chỉ đọc file này + AGENTS.md)
+# SPEC — mini_ledger (versioned, coder chỉ đọc file này + AGENTS.md)
 
 ## Goal
-Sinh module `mini_todo` quản lý việc cần làm trong bộ nhớ, đủ để demo factory end-to-end.
+Sinh module `mini_ledger` ví mẫu trong bộ nhớ: nạp/rút/chuyển/tồn — đủ để
+chứng minh TIỀN KHÔNG TỰ SINH, KHÔNG MẤT, KHÔNG TIÊU 2 LẦN (pocketful track).
 
 ## Interfaces (bắt buộc, tên hàm + chữ ký)
-- `add(title: str) -> dict` — thêm việc, trả `{id:int, title:str, done:bool}`. Title rỗng phải raise ValueError.
-- `list_all() -> list[dict]` — trả tất cả theo thứ tự thêm.
-- `done(todo_id: int) -> dict` — đánh dấu xong, id sai raise KeyError.
-- `clear() -> None` — dùng để reset giữa các test evaluator.
+- `deposit(acct: str, amount: float) -> dict` — nạp, trả `{acct, balance}`. amount ≤ 0 raise ValueError.
+- `withdraw(acct: str, amount: float) -> dict` — rút, thiếu tiền raise ValueError.
+- `transfer(src: str, dst: str, amount: float) -> dict` — chuyển, thiếu tiền raise ValueError.
+- `balance(acct: str) -> float` — số dư (tài khoản mới = 0).
+- `total() -> float` — tổng mọi tài khoản (bảo toàn: chỉ đổi khi deposit/withdraw).
+- `clear() -> None` — reset giữa các test evaluator.
 
 ## Constraints
 - Stdlib only, không mạng, không file ngoài bộ nhớ.
-- Id tăng dần từ 1, không tái dùng id đã xóa (ở đây không có xóa).
 - Không đọc `holdout.json` trong code sinh ra (evaluator kiểm tra bằng grep).
 
 ## Non-goals
