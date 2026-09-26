@@ -1,34 +1,35 @@
-# WeAreDevelopers x BAND present: Dark Factory (hackathon edition)
+# Dark Factory — Mini Factory pocketful (BAND track)
 
 ![demo](https://img.shields.io/badge/demo-live-brightgreen) ![ci](https://img.shields.io/badge/ci-pytest-blue) ![license](https://img.shields.io/badge/license-MIT-green)
 
-Event: https://lablab.ai/ai-hackathons/wearedevelopers-hackathon | Stack: band | Demo: (chưa deploy — xem DEPLOY_HF.md) | Video: (chưa quay — điền YouTube unlisted sau)
+Event: https://lablab.ai/ai-hackathons/wearedevelopers-hackathon | Track: pocketful | Demo: https://dark-factory.streamlit.app/ | Video: (quay xong điền YouTube unlisted)
 
-> 1 dòng: app làm gì + cho ai + đo được gì (điền sau khi chốt CONCEPT).
+> Software factory kiểm chứng ví tiền: spec 1 trang → code → evaluator độc lập chấm conservation — cho solo dev ship tính năng tiền bạc không cần đọc từng diff. 5/5 holdout, ~609 tokens/task.
 
 ## Demo
 
-- Live: (chưa deploy — xem DEPLOY_HF.md) (judge/NTD mở là dùng được, không setup)
-- Video 2 phút: (chưa quay — điền YouTube unlisted sau)
+- Live: https://dark-factory.streamlit.app/ (bấm Run factory là chạy cả LOOP)
+- Video 3.5–4.5 phút: (quay xong điền YouTube unlisted)
 
 ## Chạy (5 phút, không hỏi thêm)
 
 ```bash
-python3 src/main.py "input thử của bạn"
+python3 src/main.py
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest src/ -q
 ```
 
-## Architecture
+## Architecture (factory thật, BAND load-bearing)
 
 ```
-input -> src/main.py:build() [sponsor band load-bearing] -> output
-                                          |-> app.py (Gradio HF Spaces)
-                                          |-> src/test_smoke.py (pytest)
+SPEC.md -> planner -> coder -> mini_ledger.py -> evaluator (holdout riêng) -> report
+   |            BAND room 4ec606f4 (architect/coder/tester + human approve gate)
+   |-> app_streamlit.py (demo public) |-> src/test_smoke.py (CI)
 ```
 
-- `src/main.py` — core tái dùng (mang sang job/freelance được, không lẫn code thi)
-- `app.py` — demo entry (Gradio), wrap `build()`
-- `SPEC.md` (nếu có) — interfaces versioned cho agent khác build tiếp
+- `src/factory.py` — planner/coder/evaluator tách biệt (coder không đọc holdout)
+- `src/holdout.json` — 5 scenarios conservation/no-double-spend (evaluator giữ riêng)
+- `band-agents/` — 3 agents OpenCode nối BAND rooms thật (xem `BAND_EVIDENCE.md`)
+- `BAND_EVIDENCE.md` — room ID + handoff + human APPROVE (gỡ BAND ra là mất LOOP)
 
 ## Results (pocketful track, chạy lại được bằng `python3 src/main.py`)
 
